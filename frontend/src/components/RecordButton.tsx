@@ -24,7 +24,8 @@ function formatTime(seconds: number): string {
 }
 
 export default function RecordButton({ onRecordingComplete, disabled, className }: RecordButtonProps) {
-  const { isRecording, setRecording, setRecordingBlob, setRecordingDuration } = useAppStore()
+  const isRecording = useAppStore(state => state.audio.isRecording)
+  const { setRecording, setRecordingBlob, setRecordingDuration } = useAppStore()
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
