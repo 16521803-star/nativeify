@@ -2,6 +2,7 @@
  * ProgressPipeline.tsx — 3-step pipeline progress tracker
  * Steps: Transcribe → Correct → Synthesize
  */
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FileText, Wand2, Volume2, Check, Loader2, Clock } from 'lucide-react'
 import clsx from 'clsx'
@@ -50,6 +51,27 @@ interface ProgressPipelineProps {
 
 export default function ProgressPipeline({ className }: ProgressPipelineProps) {
   const { pipelineStep, progress, errorMessage } = useAppStore()
+  const [elapsed, setElapsed] = useState(0)
+
+  useEffect(() => {
+    const isProcessing = ['uploading', 'transcribing', 'correcting', 'synthesizing'].includes(pipelineStep)
+    if (!isProcessing) {
+      setElapsed(0)
+      return
+    }
+
+    const interval = setInterval(() => {
+      setElapsed(prev => prev + 1)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [pipelineStep])
+
+  const formatTime = (sec: number) => {
+    const m = Math.floor(sec / 60)
+    const s = sec % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
 
   const isIdle = pipelineStep === 'idle'
   if (isIdle) return null
@@ -64,12 +86,15 @@ export default function ProgressPipeline({ className }: ProgressPipelineProps) {
       {/* Overall progress bar */}
       <div className="flex flex-col gap-1.5">
         <div className="flex justify-between items-center">
-          <span className="text-xs font-semibold text-text-secondary">
+          <span className="text-xs font-semibold text-text-secondary flex items-center gap-1.5">
             {pipelineStep === 'done' ? '✅ Complete' :
              pipelineStep === 'error' ? '❌ Failed' :
              pipelineStep === 'recording' ? '🔴 Recording…' :
              pipelineStep === 'uploading' ? '⬆️ Uploading…' :
              '⚙️ Processing…'}
+            {['uploading', 'transcribing', 'correcting', 'synthesizing'].includes(pipelineStep) && (
+              <span className="text-text-muted font-mono font-normal">({formatTime(elapsed)})</span>
+            )}
           </span>
           <span className="text-xs font-mono text-text-muted tabular-nums">{progress}%</span>
         </div>
@@ -87,6 +112,15 @@ export default function ProgressPipeline({ className }: ProgressPipelineProps) {
         </div>
         {pipelineStep === 'error' && errorMessage && (
           <p className="text-xs text-danger mt-1">{errorMessage}</p>
+        )}
+        {['uploading', 'transcribing', 'correcting', 'synthesizing'].includes(pipelineStep) && (
+          <div className="flex items-start gap-1.5 text-[10px] text-text-muted bg-surface-2/30 border border-surface-4/40 rounded-lg p-2.5 mt-1 leading-relaxed animate-in fade-in duration-300">
+            <Clock size={11} className="mt-0.5 shrink-0 text-accent" />
+            <div>
+              <span className="font-semibold text-text-secondary">Note on local processing:</span>{' '}
+              Generating speech with voice cloning (XTTS) runs entirely offline on your machine. On CPU systems, this typically takes around 1 to 2 minutes. Please keep this tab active.
+            </div>
+          </div>
         )}
       </div>
 

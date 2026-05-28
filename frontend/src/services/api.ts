@@ -338,7 +338,7 @@ export async function exportAsMp3(
 
 /** Resolve a relative /output/... URL to a full URL using the backend base */
 export function resolveAudioUrl(relativeUrl: string): string {
-  if (relativeUrl.startsWith('http')) return relativeUrl
+  if (relativeUrl.startsWith('http') || relativeUrl.startsWith('blob:')) return relativeUrl
   const backendBase = _baseUrl.replace('/api/v1', '')
   return `${backendBase}${relativeUrl}`
 }
