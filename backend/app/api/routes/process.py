@@ -152,15 +152,6 @@ async def process_all(
         # ── Save upload ───────────────────────────────────
         upload_path = await audio_svc.save_upload(content, audio.filename)
 
-        # ── Validate duration ─────────────────────────────
-        try:
-            await audio_svc.validate_duration(upload_path)
-        except ValueError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=str(exc),
-            )
-
         # ── Optional noise reduction ──────────────────────
         working_path = upload_path
         if opts.vad_filter:  # Reuse vad_filter flag loosely as "pre-processing on"
@@ -183,6 +174,15 @@ async def process_all(
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Audio preprocessing failed: {exc}",
+            )
+
+        # ── Validate duration (done on stable converted WAV to get correct duration) ─────────────────────────────
+        try:
+            await audio_svc.validate_duration(processed_path)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=str(exc),
             )
 
         # ── Handle voice sample ───────────────────────────

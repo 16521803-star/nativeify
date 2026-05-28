@@ -210,6 +210,17 @@ export default function MainPage() {
                   className="rounded-xl overflow-hidden"
                 />
               </div>
+
+              {originalUrl && !store.audio.isRecording && (
+                <div className="w-full flex items-center justify-between bg-surface-2 border border-surface-4 rounded-xl px-4 py-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <span className="text-xs font-semibold text-text-secondary">Recording Preview</span>
+                  <audio
+                    src={originalUrl}
+                    controls
+                    className="h-8 max-w-full outline-none"
+                  />
+                </div>
+              )}
             </motion.div>
           ) : (
             <motion.div
@@ -226,12 +237,22 @@ export default function MainPage() {
                 disabled={isProcessing}
               />
               {uploadedUrl && (
-                <WaveformVisualizer
-                  mode="static"
-                  audioUrl={uploadedUrl}
-                  height={64}
-                  className="rounded-xl overflow-hidden"
-                />
+                <>
+                  <WaveformVisualizer
+                    mode="static"
+                    audioUrl={uploadedUrl}
+                    height={64}
+                    className="rounded-xl overflow-hidden"
+                  />
+                  <div className="w-full flex items-center justify-between bg-surface-2 border border-surface-4 rounded-xl px-4 py-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <span className="text-xs font-semibold text-text-secondary">Upload Preview</span>
+                    <audio
+                      src={uploadedUrl}
+                      controls
+                      className="h-8 max-w-full outline-none"
+                    />
+                  </div>
+                </>
               )}
             </motion.div>
           )}

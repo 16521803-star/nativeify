@@ -104,17 +104,7 @@ async def transcribe_audio(
         # ── 2. Save uploaded bytes ────────────────────────
         upload_path = await audio_svc.save_upload(content, audio.filename)
 
-        # ── 3. Validate duration ──────────────────────────
-        try:
-            duration = await audio_svc.validate_duration(upload_path)
-            logger.debug("Audio duration: {:.2f}s", duration)
-        except ValueError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=str(exc),
-            )
-
-        # ── 4. Optional noise reduction ───────────────────
+        # ── 3. Optional noise reduction ───────────────────
         working_path = upload_path
         if denoise:
             logger.info("Applying noise reduction...")
@@ -125,7 +115,7 @@ async def transcribe_audio(
                 logger.warning("Noise reduction failed (skipping): {}", exc)
                 # Non-fatal — continue with original audio
 
-        # ── 5. Convert to 16kHz mono WAV ──────────────────
+        # ── 4. Convert to 16kHz mono WAV ──────────────────
         try:
             processed_path = await audio_svc.prepare_for_transcription(working_path)
         except AudioProcessingError as exc:
@@ -133,6 +123,16 @@ async def transcribe_audio(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Audio conversion failed: {exc}. "
                        f"Ensure FFmpeg is installed and the file is a valid audio file.",
+            )
+
+        # ── 5. Validate duration (done on the stable converted WAV to get correct duration) ──────────────────────────
+        try:
+            duration = await audio_svc.validate_duration(processed_path)
+            logger.debug("Audio duration: {:.2f}s", duration)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=str(exc),
             )
 
         # ── 6. Transcribe ─────────────────────────────────
