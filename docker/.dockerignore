@@ -1,0 +1,30 @@
+# docker/.dockerignore
+**/.git
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache
+**/.ruff_cache
+**/.ipynb_checkpoints
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Frontend builds & dependencies
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.cache/
+
+# Local configuration and outputs
+backend/output/
+backend/.env
+.env
+
+# Large model binaries
+models/huggingface/
+models/tts/
+models/whisper/

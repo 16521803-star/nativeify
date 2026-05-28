@@ -1,0 +1,57 @@
+# =============================================================
+#  Nativeify Backend — Python Dependencies
+#  Pin exact versions for reproducible installs.
+#  Install: pip install -r requirements.txt
+# =============================================================
+
+# ── Web Framework ────────────────────────────────────────
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.12      # File upload support
+starlette==0.41.3
+
+# ── Configuration & Validation ───────────────────────────
+pydantic==2.10.3
+pydantic-settings==2.6.1
+python-dotenv==1.0.1
+
+# ── HTTP Client (for Ollama) ─────────────────────────────
+httpx==0.28.1
+aiohttp==3.11.10
+
+# ── Logging ──────────────────────────────────────────────
+loguru==0.7.3
+
+# ── AI / ML — Speech-to-Text ─────────────────────────────
+faster-whisper==1.1.0         # Whisper inference (CTranslate2-based)
+# Note: torch is pulled in by TTS below
+
+# ── AI / ML — Text-to-Speech ─────────────────────────────
+coqui-tts                     # Coqui TTS community fork (supports Python 3.12)
+transformers==4.40.0          # Required for Coqui TTS compatibility (avoid BeamSearchScorer errors)
+
+# ── PyTorch (CPU version — override with CUDA below) ─────
+# For CUDA 11.8:
+#   pip install torch==2.5.1+cu118 torchaudio==2.5.1+cu118 \
+#     --index-url https://download.pytorch.org/whl/cu118
+torch==2.5.1
+torchaudio==2.5.1
+
+# ── Audio Processing ─────────────────────────────────────
+soundfile==0.12.1             # Read/write audio files
+numpy==1.26.4                 # Array ops (pinned for TTS compat)
+scipy==1.14.1                 # Signal processing
+noisereduce==3.0.3            # Spectral noise reduction
+librosa==0.10.2.post1         # Audio feature extraction
+
+# ── Text Diff ────────────────────────────────────────────
+diff-match-patch==20241021    # Word-level diff generation
+
+# ── File Handling ────────────────────────────────────────
+aiofiles==24.1.0              # Async file I/O
+
+# ── Dev / Testing ────────────────────────────────────────
+ruff==0.8.4                   # Linter + formatter
+pytest==8.3.4
+pytest-asyncio==0.24.0
+httpx==0.28.1                 # Used in tests as async test client

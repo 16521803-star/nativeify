@@ -1,0 +1,323 @@
+/* =============================================================
+   Nativeify — Global Styles
+   ElevenLabs-inspired dark UI with electric purple accents.
+   ============================================================= */
+
+/* ── Google Fonts fallback (already loaded via index.html) ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties ─────────────────────────────────── */
+:root {
+  /* Core accent */
+  --accent: #7C5CFC;
+  --accent-light: #9B82FD;
+  --accent-dim: rgba(124, 92, 252, 0.15);
+  --accent-glow: rgba(124, 92, 252, 0.35);
+
+  /* Surfaces */
+  --surface-0: #09090F;
+  --surface-1: #0F0F1A;
+  --surface-2: #16162A;
+  --surface-3: #1E1E30;
+  --surface-4: #28283D;
+
+  /* Text */
+  --text-primary: #F0EEFF;
+  --text-secondary: #9490B5;
+  --text-muted: #504E6B;
+
+  /* Recording red */
+  --record-red: #EF4444;
+  --record-glow: rgba(239, 68, 68, 0.35);
+
+  /* Waveform cyan */
+  --wave-color: #7C5CFC;
+  --wave-progress: #9B82FD;
+
+  /* Transition standard */
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Base Reset ─────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--surface-0);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-4);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ── Text Selection ─────────────────────────────────────────── */
+::selection {
+  background: var(--accent-dim);
+  color: var(--accent-light);
+}
+
+/* ── Focus Ring ─────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Typography ─────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+
+/* Record button pulsing ring */
+@keyframes record-ring {
+  0%   { box-shadow: 0 0 0 0 var(--record-glow); }
+  70%  { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+.animate-record-ring {
+  animation: record-ring 1.5s ease-out infinite;
+}
+
+/* Accent glow pulse */
+@keyframes accent-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  50%       { box-shadow: 0 0 24px 4px var(--accent-glow); }
+}
+.animate-accent-glow {
+  animation: accent-glow-pulse 2.5s ease-in-out infinite;
+}
+
+/* Shimmer skeleton loading */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    var(--surface-3) 50%,
+    var(--surface-2) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.8s infinite linear;
+  border-radius: 6px;
+}
+
+/* Waveform bars bounce */
+@keyframes wave-bounce {
+  0%, 100% { transform: scaleY(0.25); }
+  50%       { transform: scaleY(1); }
+}
+
+/* Step progress line fill */
+@keyframes line-fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Float in from bottom */
+@keyframes float-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-float-up {
+  animation: float-up 0.35s ease-out forwards;
+}
+
+/* ── Glassmorphism Card ──────────────────────────────────────── */
+@layer components {
+  .glass-card {
+    @apply bg-surface-1 border border-surface-4 rounded-2xl;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);
+    transition: box-shadow var(--transition), border-color var(--transition);
+  }
+
+  .glass-card:hover {
+    border-color: var(--surface-4);
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(124, 92, 252, 0.15);
+  }
+
+  /* Accent gradient button */
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+           rounded-xl font-semibold text-sm text-white
+           transition-all duration-200 select-none cursor-pointer;
+    background: linear-gradient(135deg, #7C5CFC 0%, #6344E8 100%);
+    box-shadow: 0 2px 12px rgba(124, 92, 252, 0.35);
+  }
+  .btn-accent:hover:not(:disabled) {
+    background: linear-gradient(135deg, #9B82FD 0%, #7C5CFC 100%);
+    box-shadow: 0 4px 20px rgba(124, 92, 252, 0.5);
+    transform: translateY(-1px);
+  }
+  .btn-accent:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 1px 6px rgba(124, 92, 252, 0.3);
+  }
+  .btn-accent:disabled {
+    @apply opacity-40 cursor-not-allowed;
+    transform: none;
+  }
+
+  /* Ghost button */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2
+           rounded-xl font-medium text-sm text-text-secondary
+           border border-surface-4 bg-transparent
+           transition-all duration-200 select-none cursor-pointer;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    @apply text-text-primary bg-surface-2 border-surface-3;
+  }
+  .btn-ghost:disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+
+  /* Input field */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl bg-surface-2 border border-surface-4
+           text-text-primary placeholder-text-muted text-sm
+           transition-all duration-200 outline-none;
+  }
+  .input-field:focus {
+    @apply border-accent;
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5
+           rounded-full text-2xs font-semibold uppercase tracking-wide;
+  }
+  .badge-accent  { @apply badge bg-accent/15 text-accent-light; }
+  .badge-success { @apply badge bg-success/15 text-success; }
+  .badge-warning { @apply badge bg-warning/15 text-warning; }
+  .badge-danger  { @apply badge bg-danger/15 text-danger; }
+  .badge-muted   { @apply badge bg-surface-3 text-text-secondary; }
+
+  /* Diff highlight */
+  .diff-insert {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #4ADE80;
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+  .diff-delete {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #F87171;
+    border-radius: 3px;
+    padding: 0 2px;
+    text-decoration: line-through;
+    text-decoration-color: #F8717180;
+  }
+
+  /* Sidebar nav item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+           text-text-secondary transition-all duration-150 cursor-pointer select-none;
+  }
+  .nav-item:hover {
+    @apply text-text-primary bg-surface-2;
+  }
+  .nav-item.active {
+    @apply text-accent-light bg-accent/10;
+    box-shadow: inset 2px 0 0 var(--accent);
+  }
+
+  /* Section divider */
+  .divider {
+    @apply border-t border-surface-4 my-4;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    @apply absolute z-50 px-2.5 py-1.5 rounded-lg text-xs font-medium
+           bg-surface-2 border border-surface-4 text-text-primary
+           pointer-events-none whitespace-nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+}
+
+/* ── Utility Overrides ──────────────────────────────────────── */
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #F0EEFF 0%, #9B82FD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-accent-glow {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-glow);
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Truncate long text elegantly */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Waveform container */
+  .waveform-container wave {
+    overflow: hidden !important;
+  }
+}

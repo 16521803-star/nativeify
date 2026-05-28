@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # ── Ollama Local LLM Service ──────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: nativeify-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # NOTE: If you do not have an NVIDIA GPU, comment out the deploy block below.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # ── FastAPI Backend Service ──────────────────────────────
+  backend:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.backend
+    container_name: nativeify-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - WHISPER_DEVICE=auto
+      - TTS_DEVICE=auto
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=8000
+      - LOG_LEVEL=info
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173
+    volumes:
+      - ../models:/app/models
+      - ../backend/output:/app/backend/output
+    depends_on:
+      - ollama
+    # NOTE: If you do not have an NVIDIA GPU, comment out the deploy block below.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  ollama_data:

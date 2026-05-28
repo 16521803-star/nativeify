@@ -1,0 +1,90 @@
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg
+pip-wheel-metadata/
+.coverage
+htmlcov/
+
+# ── Node / Frontend ──────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.eslintcache
+*.tsbuildinfo
+.yarn/
+.pnp.*
+
+# ── AI Models (large binary files — download separately) ─
+models/**/*.bin
+models/**/*.pth
+models/**/*.pt
+models/**/*.onnx
+models/**/*.safetensors
+models/**/*.ckpt
+models/**/*.pkl
+!models/.gitkeep
+
+# ── Environment / Secrets ────────────────────────────────
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# ── Audio Output Files ───────────────────────────────────
+output/
+*.wav
+*.mp3
+*.ogg
+*.flac
+!scripts/samples/*.wav
+
+# ── Temporary Files ──────────────────────────────────────
+tmp/
+temp/
+/tmp/nativeify_*
+
+# ── Logs ─────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ── OS Artifacts ─────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── IDE / Editor ─────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.history/
+
+# ── Docker ───────────────────────────────────────────────
+docker/ollama_data/
+
+# ── Misc ─────────────────────────────────────────────────
+*.bak
+*.orig
+*.rej

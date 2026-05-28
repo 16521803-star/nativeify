@@ -1,0 +1,13 @@
+# This directory stores downloaded AI model files.
+# Models are excluded from git due to their large size.
+#
+# Run this to download all required models:
+#   python scripts/download_models.py
+#
+# Expected contents after download:
+#   models/
+#   ├── xtts/           ← XTTS-v2 model files (~1.8GB)
+#   └── fish/           ← Fish Speech model files (optional)
+#
+# Whisper models are cached automatically by faster-whisper
+# to the default HuggingFace cache directory.
